@@ -1,6 +1,10 @@
 import datetime
 import random
 from storage import DatetimeEventStore
+
+import time
+start_time = time.time()
+
 store = DatetimeEventStore()
 
 # Generate a bunch of events to be stored in a period of 20 years.
@@ -9,10 +13,13 @@ end_ts = datetime.datetime(2020, 1, 1).timestamp()
 
 for i in range(10000):
     dt = datetime.datetime.fromtimestamp(random.randint(start_ts, end_ts))
-    store.store_event(at=dt, data=“Event number %d.” % i)
+    store.store_event(at=dt, data="Event number %d." % i)
 
 for event in store.get_events(
-    start=datetime.datetime(year=2018, month=1, day=1),
-    end=datetime.datetime(year=2018, month=2, day=1)
+        start=datetime.datetime(year=2018, month=1, day=1),
+        end=datetime.datetime(year=2018, month=2, day=1)
     ):
     print(event)
+
+del store
+print("--- %s seconds ---" % (time.time() - start_time))
